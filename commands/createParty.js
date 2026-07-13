@@ -40,10 +40,13 @@ export async function execute(interaction) {
 
   // Edit pesan channel menjadi embed
   await partyMessage.edit({
-    content: `@here | ⚔️ ${party.title}`,
-    embeds: [buildPartyEmbed(party)],
-    components: [...buildRoleButtons(), buildHostButtons(party.status)],
-  });
+  content: `@here | ⚔️ ${party.title}`,
+  embeds: [buildPartyEmbed(party)],
+  components: [
+    ...buildRoleButtons(),
+    ...buildHostButtons(party.status),
+  ],
+});
 
   // Hapus pesan "Bot is thinking..."
   await interaction.deleteReply();

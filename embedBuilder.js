@@ -21,14 +21,12 @@ export function buildPartyEmbed(party) {
     party.status === 'done'      ? '✅ Done' :
                                    '❌ Cancelled';
 
-  // Build role lines — show all slots individually for multi-slot roles
   const roleLines = ROLES.map(r => {
     const members = party.members[r.id] ?? [];
     if (r.maxSlot === 1) {
       const m = members[0];
       return `**${r.label}** — ${m ? `<@${m.userId}>` : '*empty*'}`;
     }
-    // Multi-slot: show each slot
     const slots = Array.from({ length: r.maxSlot }, (_, i) => {
       const m = members[i];
       return m ? `<@${m.userId}>` : '*empty*';
@@ -41,9 +39,9 @@ export function buildPartyEmbed(party) {
     .setTitle(`⚔️ ${party.title}`)
     .setDescription(roleLines)
     .addFields(
-      { name: 'Host',   value: `<@${party.hostId}>`,       inline: true },
-      { name: 'Slot',   value: `${filled}/${MAX_PARTY_SIZE}`, inline: true },
-      { name: 'Status', value: statusLabel,                 inline: true },
+      { name: 'Host',   value: `<@${party.hostId}>`,          inline: true },
+      { name: 'Slot',   value: `${filled}/${MAX_PARTY_SIZE}`,  inline: true },
+      { name: 'Status', value: statusLabel,                    inline: true },
     )
     .setTimestamp(party.createdAt)
     .setFooter({ text: 'Klik tombol role di bawah untuk join' });
@@ -68,8 +66,10 @@ export function buildRoleButtons(disabled = false) {
   return rows;
 }
 
+// Returns array of 2 ActionRows
 export function buildHostButtons(partyStatus) {
-  const row = new ActionRowBuilder().addComponents(
+  // Row 1: aksi utama
+  const row1 = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId('party_cancel_role')
       .setLabel('Cancel My Role')
@@ -95,5 +95,20 @@ export function buildHostButtons(partyStatus) {
       .setStyle(ButtonStyle.Danger)
       .setEmoji('🚫'),
   );
-  return row;
+
+  // Row 2: utilitas host
+  const row2 = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId('party_edit_title')
+      .setLabel('Edit Title')
+      .setStyle(ButtonStyle.Secondary)
+      .setEmoji('✏️'),
+    new ButtonBuilder()
+      .setCustomId('party_ping_again')
+      .setLabel('Notify Again')
+      .setStyle(ButtonStyle.Secondary)
+      .setEmoji('📣'),
+  );
+
+  return [row1, row2];
 }

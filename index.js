@@ -25,7 +25,7 @@ for (const file of eventFiles) {
   client.on(event.name, (...args) => event.execute(...args, client));
 }
 
-client.once('ready', () => {
+client.once('clientReady', () => {
   console.log(`✅ Bot online sebagai ${client.user.tag}`);
 });
 

@@ -105,7 +105,7 @@ export function leaveRole(messageId, userId) {
   return { ok: true, party, roleLeft };
 }
 
-//remove member by host
+// remove member by host
 export function removeMember(messageId, hostId, targetUserId) {
   const parties = load();
   const idx = parties.findIndex(p => p.messageId === messageId);
@@ -131,7 +131,16 @@ export function removeMember(messageId, hostId, targetUserId) {
   return { ok: true, party, roleLeft };
 }
 
-// status: 'open' | 'locked' | 'done'
+export function updateTitle(messageId, newTitle) {
+  const parties = load();
+  const idx = parties.findIndex(p => p.messageId === messageId);
+  if (idx === -1) return null;
+  parties[idx].title = newTitle;
+  save(parties);
+  return parties[idx];
+}
+
+// status: 'open' | 'locked' | 'done' | 'cancelled'
 export function setStatus(messageId, status) {
   const parties = load();
   const idx = parties.findIndex(p => p.messageId === messageId);
